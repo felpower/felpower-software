@@ -1,6 +1,5 @@
 ﻿<?php
 
-// Replace this with your own email address
 $siteOwnersEmail = 'info@felpower-software.com';
 
 
@@ -20,8 +19,8 @@ if($_POST) {
         $error['email'] = "Please enter a valid email address.";
     }
     // Check Message
-    if (strlen($contact_message) < 15) {
-        $error['message'] = "Please enter your message. It should have at least 15 characters.";
+    if (strlen($contact_message) < 10) {
+        $error['message'] = "Please enter your message. It should have at least 10 characters.";
     }
     // Subject
     if ($subject == '') { $subject = "Contact Form Submission"; }
