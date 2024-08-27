@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-B8MDHY6RJ1"></script>
+        <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { dataLayer.push(arguments); }
+            gtag('js', new Date());
+    
+            gtag('config', 'G-B8MDHY6RJ1');
+        </script>
+        <!--- Lazy loading Script-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js"
+            integrity="sha512-q583psrP4D967vrh8D95Q/5nHd5F85dfBrJ4TKM/9e1x3E1PJygmDH8X1bvj9X6/jYsKLsIwQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <!--- basic page needs
+        ================================================== -->
+        <meta charset="utf-8">
+        <title>Calendar</title>
+        <meta name="description" content="">
+        <meta name="author" content="">
+    
+        <!-- mobile specific metas
+        ================================================== -->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+        <!-- CSS
+        ================================================== -->
+        <link rel="stylesheet" href="css/base.css">
+        <link rel="stylesheet" href="css/vendor.css">
+        <link rel="stylesheet" href="css/main.css">
+    
+        <!-- script
+        ================================================== -->
+        <script src="js/modernizr.js"></script>
+        <script src="js/pace.min.js"></script>
+    
+        <!-- favicons
+        ================================================== -->
+        <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    
+    </head>
+<body>
+    <!-- Header -->
+    <header class="s-header">
+        <div class="header-logo">
+            <a class="smoothscroll site-logo" href="index.html"><img src="images/logo.png" alt="Homepage"></a>
+        </div>
+        <nav class="header-nav-wrap">
+            <ul class="header-nav">
+                <li><a class="smoothscroll" href="index.html#home" title="home">Home</a></li>
+                <li><a class="smoothscroll" href="index.html#about" title="about">About</a></li>
+                <li><a class="smoothscroll" href="index.html#works" title="works">Works</a></li>
+                <li><a class="smoothscroll" href="index.html#contact" title="contact">Contact</a></li>
+                <li class="current"><a href="calendar.html" title="calendar">Calendar</a></li>
+            </ul>
+        </nav>
+        <a class="header-menu-toggle" href="#0"><span>Menu</span></a>
+    </header>
+
+    <!-- Calendar Section -->
+    <section id="calendar" class="s-calendar">
+        <div id="calendar-container">
+            <iframe src="https://calendar.google.com/calendar/embed?src=33c979382d6ae10616ec2cd06d3f08baa1d74897430287db6df2a59138cabfaa%40group.calendar.google.com&ctz=Europe%2FVienna&showTitle=0&showNav=0&showDate=0&showPrint=0&showTabs=0&showCalendars=0&showTz=0" style="border: 0" width="1000" height="700" frameborder="0" scrolling="no"></iframe>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="row">
+            <div class="col-full">
+                <div class="footer-logo">
+                    <a class="smoothscroll footer-site-logo" href="index.html#top"><img src="images/logo.png" alt="Homepage"></a>
+                </div>
+                <ul class="footer-social">
+                    <li><a href="https://www.facebook.com/pazius/" target="_blank">
+                        <i class="im im-facebook" aria-hidden="true"></i>
+                    </a></li>
+                    <!-- Add other social links as needed -->
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Include jQuery before main.js -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="js/main.js"></script> <!-- Link to your main JavaScript file -->
+</body>
+</html>
