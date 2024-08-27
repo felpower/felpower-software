@@ -3414,6 +3414,35 @@ html.no-csstransitions .home-content__main {
     display: block;
 }
 
+/* --------------------------------------------------------------- 
+ * calendar - (_site-layout.scss)
+ * --------------------------------------------------------------- */
+
+ .s-calendar {
+    padding: 100px 0; /* Adjust padding as needed */
+    background-color: #1e1e1e; /* Dark background color */
+    color: #ffffff; /* Text color */
+    text-align: center; /* Center align text */
+}
+
+#calendar-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0; /* Optional: Add some margin for spacing */
+    background-color: #1e1e1e; /* Dark background color */
+    padding: 10px; /* Padding around the iframe */
+    border-radius: 8px; /* Rounded corners */
+}
+
+#calendar-container iframe {
+    border: none; /* Remove default border */
+    filter: invert(1) hue-rotate(180deg); /* Invert colors for dark theme */
+    width: 100%; /* Make the iframe responsive */
+    max-width: 1000px; /* Set a maximum width */
+    height: 700px; /* Set a fixed height */
+}
+
 
 /* --------------------------------------------------------------- 
  * loader animation - (_site-layout.scss)

@@ -387,6 +387,18 @@
         });
     };
 
+    /* Calendar
+        * ------------------------------------------------------ */
+    // Function to embed Google Calendar
+    function embedGoogleCalendar() {
+        var calendarContainer = document.getElementById('calendar-container');
+        if (calendarContainer) {
+            calendarContainer.innerHTML = '<iframe src="https://calendar.google.com/calendar/embed?src=33c979382d6ae10616ec2cd06d3f08baa1d74897430287db6df2a59138cabfaa%40group.calendar.google.com&ctz=Europe%2FVienna" style="border: 0" width="800" height="600" frameborder="0" scrolling="no"></iframe>';
+        }
+    }
+
+    // Call the function to embed the calendar
+    embedGoogleCalendar();
 
     /* Back to Top
      * ------------------------------------------------------ */
