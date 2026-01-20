@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="de" class="no-js">
+<head>
+    <!--- basic page needs
+    ================================================== -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Wiener Linien Monitor</title>
+
+    <meta name="description" content="Real-time departure monitor for Wiener Linien">
+    <meta name="author" content="">
+
+    <!-- CSS
+    ================================================== -->
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/vendor.css">
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        .monitor-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .monitor-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .monitor-header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            color: #000;
+        }
+
+        .station-selector {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .station-selector select {
+            padding: 10px 20px;
+            font-size: 1.6rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .departures-table {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .departures-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .departures-table thead {
+            background: #e30613;
+            color: white;
+        }
+
+        .departures-table th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1.4rem;
+        }
+
+        .departures-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            font-size: 1.4rem;
+        }
+
+        .departures-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .line-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 5px;
+            font-weight: bold;
+            color: white;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .line-u { background: #0072bc; }
+        .line-s { background: #0072bc; }
+        .line-bus { background: #e30613; }
+        .line-tram { background: #e30613; }
+
+        .countdown {
+            font-weight: bold;
+            color: #e30613;
+            font-size: 1.6rem;
+        }
+
+        .countdown-now {
+            color: #ff0000;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.6rem;
+            color: #666;
+        }
+
+        .error {
+            background: #ffe6e6;
+            border: 1px solid #e30613;
+            color: #e30613;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .last-update {
+            text-align: center;
+            color: #666;
+            font-size: 1.2rem;
+            margin-top: 20px;
+        }
+
+        .barrier-free {
+            color: #0072bc;
+            font-weight: bold;
+        }
+
+        .traffic-info {
+            background: #fff9e6;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .traffic-info h3 {
+            margin-top: 0;
+            color: #ff6f00;
+        }
+    </style>
+
+    <!-- favicons
+    ================================================== -->
+    <link rel="icon" type="image/png" href="images/favicon.png">
+
+    <script>
+        document.documentElement.classList.remove('no-js');
+        document.documentElement.classList.add('js');
+    </script>
+</head>
+
+<body id="top">
+
+    <!-- preloader
+    ================================================== -->
+    <div id="preloader">
+        <div id="loader" class="dots-fade">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+
+    <!-- header
+    ================================================== -->
+    <header class="s-header">
+        <div class="header-logo">
+            <a class="site-logo" href="index.html">
+                <img src="images/logo.svg" alt="Homepage">
+            </a>
+        </div>
+    </header>
+
+    <!-- monitor section
+    ================================================== -->
+    <section class="monitor-container">
+        <div class="monitor-header">
+            <h1>🚇 Wiener Linien Monitor</h1>
+            <p>Echtzeitinformationen für öffentliche Verkehrsmittel in Wien</p>
+        </div>
+
+        <div class="station-selector">
+            <label for="station-select" style="font-size: 1.6rem; margin-right: 10px;">Station auswählen:</label>
+            <select id="station-select">
+                <option value="623,592">Allerheiligengasse (beide Richtungen)</option>
+                <option value="4643,4648">Handelskai S U</option>
+                <option value="custom">Benutzerdefinierte RBL-Nummern...</option>
+            </select>
+            <input type="text" id="custom-rbl" placeholder="RBL-Nummern (z.B. 623,592)" style="display: none; margin-left: 10px; padding: 10px; font-size: 1.6rem; border: 2px solid #ddd; border-radius: 5px;">
+        </div>
+
+        <div id="traffic-info-container"></div>
+        <div id="error-container"></div>
+
+        <div class="departures-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Linie</th>
+                        <th>Richtung</th>
+                        <th>Abfahrt</th>
+                        <th>Barrierefrei</th>
+                    </tr>
+                </thead>
+                <tbody id="departures-body">
+                    <tr>
+                        <td colspan="4" class="loading">Lade Daten...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="last-update" id="last-update">
+            Letzte Aktualisierung: --
+        </div>
+    </section>
+
+    <!-- footer
+    ================================================== -->
+    <footer>
+        <div class="row">
+            <div class="col-full ss-copyright">
+                <span>&copy; Copyright Wiener Linien Monitor 2026</span>
+                <span>Powered by Wiener Linien Open Data</span>
+            </div>
+        </div>
+
+        <div class="ss-go-top">
+            <a class="smoothscroll" title="Back to Top" href="#top">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                    <path d="M12 0l8 9h-6v15h-4v-15h-6z"/>
+                </svg>
+            </a>
+        </div>
+    </footer>
+
+    <!-- Java Script
+    ================================================== -->
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/plugins.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/monitor.js"></script>
+
+</body>
+</html>
