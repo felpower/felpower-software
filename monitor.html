@@ -19,23 +19,183 @@
         .monitor-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 40px 20px;
+            padding: -40px;
         }
 
         .monitor-header {
             text-align: center;
-            margin-bottom: 40px;
+            color: #666;
         }
 
         .monitor-header h1 {
             font-size: 3rem;
-            margin-bottom: 10px;
-            color: #000;
+            color: #666;
         }
 
         .station-selector {
             margin-bottom: 30px;
             text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .station-selector-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .weather-widget {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            /* gap: 15px; */
+            /* box-shadow: 0 4px 6px rgba(0,0,0,0.1); */
+            min-width: 250px;
+        }
+
+        .weather-icon {
+            font-size: 3rem;
+        }
+
+        .weather-info {
+            text-align: left;
+        }
+
+        .weather-temp {
+            font-size: 2.4rem;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .weather-desc {
+            font-size: 1.4rem;
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        .weather-location {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin: 0;
+        }
+
+        .smartmeter-widget {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            min-width: 250px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .smartmeter-widget:hover {
+            transform: translateY(-2px);
+        }
+
+        .smartmeter-icon {
+            font-size: 3rem;
+        }
+
+        .smartmeter-info {
+            text-align: left;
+            flex: 1;
+        }
+
+        .smartmeter-value {
+            font-size: 2.4rem;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .smartmeter-label {
+            font-size: 1.4rem;
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        .smartmeter-period {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin: 0;
+        }
+
+        .config-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+        }
+
+        .config-modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .config-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .config-content h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .config-content input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1.4rem;
+            box-sizing: border-box;
+        }
+
+        .config-content button {
+            padding: 10px 20px;
+            margin: 10px 5px 0 0;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.4rem;
+            cursor: pointer;
+        }
+
+        .btn-save {
+            background: #11998e;
+            color: white;
+        }
+
+        .btn-cancel {
+            background: #ddd;
+            color: #333;
+        }
+
+        .config-content .note {
+            font-size: 1.2rem;
+            color: #666;
+            margin-top: 10px;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 5px;
         }
 
         .station-selector select {
@@ -182,7 +342,7 @@
     <header class="s-header">
         <div class="header-logo">
             <a class="site-logo" href="index.html">
-                <img src="images/logo.svg" alt="Homepage">
+                <img src="images/logo.png" alt="Homepage">
             </a>
         </div>
     </header>
@@ -192,19 +352,59 @@
     <section class="monitor-container">
         <div class="monitor-header">
             <h1>🚇 Wiener Linien Monitor</h1>
-            <p>Echtzeitinformationen für öffentliche Verkehrsmittel in Wien</p>
         </div>
 
         <div class="station-selector">
-            <label for="station-select" style="font-size: 1.6rem; margin-right: 10px;">Station auswählen:</label>
-            <select id="station-select">
-                <option value="623,592">Allerheiligengasse (beide Richtungen)</option>
-                <option value="4643,4648">Handelskai S U</option>
-                <option value="custom">Benutzerdefinierte RBL-Nummern...</option>
-            </select>
-            <input type="text" id="custom-rbl" placeholder="RBL-Nummern (z.B. 623,592)" style="display: none; margin-left: 10px; padding: 10px; font-size: 1.6rem; border: 2px solid #ddd; border-radius: 5px;">
+            <div class="station-selector-controls">
+                <label for="station-select" style="font-size: 1.6rem;">Station auswählen:</label>
+                <select id="station-select">
+                    <option value="623,592">Allerheiligengasse</option>
+                    <option value="4643,4648">Handelskai S U</option>
+                    <option value="custom">Benutzerdefinierte RBL-Nummern...</option>
+                </select>
+                <input type="text" id="custom-rbl" placeholder="RBL-Nummern (z.B. 623,592)" style="display: none; padding: 10px; font-size: 1.6rem; border: 2px solid #ddd; border-radius: 5px;">
+            </div>
+            
+            <div class="weather-widget" id="weather-widget">
+                <div class="weather-icon" id="weather-icon">🌡️</div>
+                <div class="weather-info">
+                    <p class="weather-temp" id="weather-temp">--°C</p>
+                    <p class="weather-desc" id="weather-desc">Lade Wetter...</p>
+                </div>
+            </div>
+
+            <div class="smartmeter-widget" id="smartmeter-widget" title="Klicken zum Konfigurieren">
+                <div class="smartmeter-icon">⚡</div>
+                <div class="smartmeter-info">
+                    <p class="smartmeter-value" id="smartmeter-value">-- kWh</p>
+                    <p class="smartmeter-label" id="smartmeter-label">Wochenverbrauch</p>
+                    <p class="smartmeter-period" id="smartmeter-period">Nicht konfiguriert</p>
+                </div>
+            </div>
         </div>
 
+        <!-- Smart Meter Configuration Modal -->
+        <div class="config-modal" id="config-modal">
+            <div class="config-content">
+                <h2>⚡ Smart Meter Konfiguration</h2>
+                <p>Konfigurieren Sie Ihren Smart Meter Zugang:</p>
+                <input type="text" id="meter-id" placeholder="Zählpunktnummer (z.B. AT...)">
+                <input type="password" id="meter-password" placeholder="API Key">
+                <input type="text" id="meter-username" placeholder="Optional: Benutzername" style="display:none;">
+                <div class="note">
+                    📝 <strong>Zählpunktnummer:</strong> 33-stellige Nummer auf Ihrer Stromrechnung (beginnt mit AT...)
+                </div>
+                <div class="note">
+                    🔑 <strong>API Key benötigt:</strong> Registrieren Sie sich im <a href="https://api-portal.wienerstadtwerke.at/portal/auth/register" target="_blank">WSTW API Portal</a> um einen API Key zu erhalten.
+                </div>
+                <button class="btn-save" id="save-config">Speichern</button>
+                <button class="btn-cancel" id="cancel-config">Abbrechen</button>
+                <button class="btn-cancel" id="clear-config" style="float: right;">Löschen</button>
+            </div>
+        </div>
+        <div class="last-update" id="last-update">
+            Letzte Aktualisierung: --
+        </div>
         <div id="traffic-info-container"></div>
         <div id="error-container"></div>
 
@@ -224,10 +424,6 @@
                     </tr>
                 </tbody>
             </table>
-        </div>
-
-        <div class="last-update" id="last-update">
-            Letzte Aktualisierung: --
         </div>
     </section>
 

@@ -11,7 +11,13 @@
         API_BASE_URL: 'https://www.wienerlinien.at/ogd_realtime/monitor',
         REFRESH_INTERVAL: 30000, // 30 seconds
         CORS_PROXY: 'https://api.allorigins.win/raw?url=', // CORS proxy for development
-        MAX_DEPARTURES: 8 // Maximum number of departures to display
+        MAX_DEPARTURES: 8, // Maximum number of departures to display
+        WEATHER_API_URL: 'https://api.open-meteo.com/v1/forecast',
+        VIENNA_LAT: 48.2082,
+        VIENNA_LON: 16.3738,
+        // Wien Energie Smart Meter API
+        SMARTMETER_API_URL: 'https://api.wstw.at/gateway/WN_SMART_METER_API/1.0',
+        SMARTMETER_PROXY: 'inc/smartmeter-proxy.php' // Backend proxy for secure API access
     };
 
     let refreshTimer = null;
@@ -23,9 +29,15 @@
     function init() {
         setupEventListeners();
         loadDepartures();
+        loadWeather();
+        loadSmartMeterData();
         
         // Auto-refresh every 30 seconds
         refreshTimer = setInterval(loadDepartures, CONFIG.REFRESH_INTERVAL);
+        // Refresh weather every 10 minutes
+        setInterval(loadWeather, 600000);
+        // Refresh smart meter data every 30 minutes
+        setInterval(loadSmartMeterData, 1800000);
     }
 
     /**
@@ -34,6 +46,34 @@
     function setupEventListeners() {
         const stationSelect = document.getElementById('station-select');
         const customRBL = document.getElementById('custom-rbl');
+        const smartmeterWidget = document.getElementById('smartmeter-widget');
+        const configModal = document.getElementById('config-modal');
+        const saveConfig = document.getElementById('save-config');
+        const cancelConfig = document.getElementById('cancel-config');
+        const clearConfig = document.getElementById('clear-config');
+
+        // Smart meter configuration
+        smartmeterWidget.addEventListener('click', function() {
+            openConfigModal();
+        });
+
+        saveConfig.addEventListener('click', function() {
+            saveSmartMeterConfig();
+        });
+
+        cancelConfig.addEventListener('click', function() {
+            configModal.classList.remove('active');
+        });
+
+        clearConfig.addEventListener('click', function() {
+            clearSmartMeterConfig();
+        });
+
+        configModal.addEventListener('click', function(e) {
+            if (e.target === configModal) {
+                configModal.classList.remove('active');
+            }
+        });
 
         stationSelect.addEventListener('change', function() {
             if (this.value === 'custom') {
@@ -255,6 +295,74 @@
     }
 
     /**
+     * Load weather data from Open-Meteo API (free, no API key required)
+     */
+    function loadWeather() {
+        const url = `${CONFIG.WEATHER_API_URL}?latitude=${CONFIG.VIENNA_LAT}&longitude=${CONFIG.VIENNA_LON}&current=temperature_2m,weather_code&timezone=Europe/Vienna`;
+        
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (data.current) {
+                    displayWeather(data.current);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching weather:', error);
+                document.getElementById('weather-desc').textContent = 'Wetter nicht verfügbar';
+            });
+    }
+
+    /**
+     * Display weather information
+     */
+    function displayWeather(current) {
+        const temp = Math.round(current.temperature_2m);
+        const weatherCode = current.weather_code;
+        
+        document.getElementById('weather-temp').textContent = `${temp}°C`;
+        
+        // Weather code to description and icon mapping (WMO Weather interpretation codes)
+        const weatherInfo = getWeatherInfo(weatherCode);
+        document.getElementById('weather-icon').textContent = weatherInfo.icon;
+        document.getElementById('weather-desc').textContent = weatherInfo.description;
+    }
+
+    /**
+     * Get weather icon and description from WMO code
+     */
+    function getWeatherInfo(code) {
+        const weatherMap = {
+            0: { icon: '☀️', description: 'Klar' },
+            1: { icon: '🌤️', description: 'Überwiegend klar' },
+            2: { icon: '⛅', description: 'Teilweise bewölkt' },
+            3: { icon: '☁️', description: 'Bewölkt' },
+            45: { icon: '🌫️', description: 'Neblig' },
+            48: { icon: '🌫️', description: 'Neblig' },
+            51: { icon: '🌦️', description: 'Leichter Nieselregen' },
+            53: { icon: '🌦️', description: 'Nieselregen' },
+            55: { icon: '🌧️', description: 'Starker Nieselregen' },
+            61: { icon: '🌧️', description: 'Leichter Regen' },
+            63: { icon: '🌧️', description: 'Regen' },
+            65: { icon: '🌧️', description: 'Starker Regen' },
+            71: { icon: '🌨️', description: 'Leichter Schneefall' },
+            73: { icon: '🌨️', description: 'Schneefall' },
+            75: { icon: '🌨️', description: 'Starker Schneefall' },
+            77: { icon: '🌨️', description: 'Schneegriesel' },
+            80: { icon: '🌦️', description: 'Leichte Schauer' },
+            81: { icon: '🌧️', description: 'Schauer' },
+            82: { icon: '⛈️', description: 'Starke Schauer' },
+            85: { icon: '🌨️', description: 'Leichte Schneeschauer' },
+            86: { icon: '🌨️', description: 'Schneeschauer' },
+            95: { icon: '⛈️', description: 'Gewitter' },
+            96: { icon: '⛈️', description: 'Gewitter mit Hagel' },
+            99: { icon: '⛈️', description: 'Starkes Gewitter' }
+        };
+        
+        return weatherMap[code] || { icon: '🌡️', description: 'Unbekannt' };
+    }
+
+    /**
      * Update last update time
      */
     function updateLastUpdateTime() {
@@ -311,6 +419,171 @@
                 <td>Nein</td>
             </tr>
         `;
+    }
+
+    /**
+     * Load smart meter data
+     */
+    function loadSmartMeterData() {
+        const credentials = getSmartMeterCredentials();
+        
+        if (!credentials) {
+            document.getElementById('smartmeter-value').textContent = '-- kWh';
+            document.getElementById('smartmeter-period').textContent = 'Nicht konfiguriert';
+            return;
+        }
+
+        document.getElementById('smartmeter-period').textContent = 'Lade...';
+        
+        // Check if backend proxy is available
+        if (window.location.protocol === 'file:' || !isBackendAvailable()) {
+            // Use demo data when running locally without backend
+            setTimeout(() => {
+                const mockConsumption = (Math.random() * 50 + 100).toFixed(1);
+                displaySmartMeterData({
+                    weeklyConsumption: mockConsumption,
+                    period: 'Demo-Daten (Backend benötigt)',
+                    unit: 'kWh'
+                });
+            }, 1000);
+        } else {
+            // Call backend proxy for secure API access
+            fetchSmartMeterAPI(credentials);
+        }
+    }
+
+    /**
+     * Check if backend is available
+     */
+    function isBackendAvailable() {
+        // Simple check - in production, you might want to ping the backend
+        return document.location.hostname !== '' && 
+               document.location.hostname !== 'localhost' &&
+               !document.location.hostname.startsWith('127.0.0.1');
+    }
+
+    /**
+     * Fetch smart meter data through backend proxy
+     */
+    function fetchSmartMeterAPI(credentials) {
+        // Using backend proxy to handle authentication securely
+        fetch(CONFIG.SMARTMETER_PROXY, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({
+                action: 'getConsumption',
+                username: credentials.username,
+                password: atob(credentials.password),
+                meterId: credentials.meterId || '',
+                period: 'week'
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                displaySmartMeterData(data.data);
+            } else {
+                throw new Error(data.error || 'API Fehler');
+            }
+        })
+        .catch(error => {
+            console.error('Smart meter API error:', error);
+            document.getElementById('smartmeter-value').textContent = 'Fehler';
+            document.getElementById('smartmeter-period').textContent = error.message;
+            
+            // Show configuration hint if authentication failed
+            if (error.message.includes('401') || error.message.includes('Login')) {
+                setTimeout(() => {
+                    document.getElementById('smartmeter-period').textContent = 'Zugangsdaten prüfen';
+                }, 2000);
+            }
+        });
+    }
+
+    /**
+     * Display smart meter data
+     */
+    function displaySmartMeterData(data) {
+        document.getElementById('smartmeter-value').textContent = `${data.weeklyConsumption} ${data.unit}`;
+        document.getElementById('smartmeter-period').textContent = data.period;
+    }
+
+    /**
+     * Open configuration modal
+     */
+    function openConfigModal() {
+        const credentials = getSmartMeterCredentials();
+        if (credentials) {
+            document.getElementById('meter-username').value = credentials.username;
+            document.getElementById('meter-id').value = credentials.meterId || '';
+        }
+        document.getElementById('config-modal').classList.add('active');
+    }
+
+    /**
+     * Save smart meter configuration
+     */
+    function saveSmartMeterConfig() {
+        const username = document.getElementById('meter-username').value.trim();
+        const password = document.getElementById('meter-password').value;
+        const meterId = document.getElementById('meter-id').value.trim();
+
+        if (!username || !password) {
+            alert('Bitte geben Sie Benutzername und Passwort ein.');
+            return;
+        }
+
+        // Store credentials in localStorage (NOT recommended for production)
+        // In production, send these to your backend and use secure token storage
+        const credentials = {
+            username: username,
+            password: btoa(password), // Basic encoding (NOT encryption!)
+            meterId: meterId
+        };
+
+        localStorage.setItem('smartmeter_config', JSON.stringify(credentials));
+        document.getElementById('config-modal').classList.remove('active');
+        
+        // Clear password field
+        document.getElementById('meter-password').value = '';
+        
+        loadSmartMeterData();
+    }
+
+    /**
+     * Clear smart meter configuration
+     */
+    function clearSmartMeterConfig() {
+        if (confirm('Möchten Sie die Smart Meter Konfiguration wirklich löschen?')) {
+            localStorage.removeItem('smartmeter_config');
+            document.getElementById('meter-username').value = '';
+            document.getElementById('meter-password').value = '';
+            document.getElementById('meter-id').value = '';
+            document.getElementById('config-modal').classList.remove('active');
+            loadSmartMeterData();
+        }
+    }
+
+    /**
+     * Get stored smart meter credentials
+     */
+    function getSmartMeterCredentials() {
+        const stored = localStorage.getItem('smartmeter_config');
+        if (stored) {
+            try {
+                return JSON.parse(stored);
+            } catch (e) {
+                return null;
+            }
+        }
+        return null;
     }
 
     // Initialize when DOM is ready
