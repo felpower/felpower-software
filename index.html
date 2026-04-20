@@ -16,7 +16,7 @@
         gtag('config', 'G-B8MDHY6RJ1');
     </script>
     <!--- Lazy loading Script-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js"
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.2/lazysizes.min.js"
         integrity="sha512-q583psrP4D967vrh8D95Q/5nHd5F85dfBrJ4TKM/9e1x3E1PJygmDH8X1bvj9X6/jYsKLsIwQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <!--- basic page needs
@@ -38,8 +38,8 @@
 
     <!-- script
     ================================================== -->
-    <script src="js/modernizr.js"></script>
-    <script src="js/pace.min.js"></script>
+    <script defer src="js/modernizr.js"></script>
+    <script defer src="js/pace.min.js"></script>
 
     <!-- favicons
     ================================================== -->
@@ -77,11 +77,10 @@
         enhance site navigation, analyze site usage, and improve marketing.
         <button>Accept</button>
     </div>
-    <script src="main.js"></script>
     <!-- home
    ================================================== -->
     <section id="home" class="s-home page-hero target-section" data-parallax="scroll" loading="lazy"
-        data-image-src="images/hero-bg.jpg" data-natural-width=3000 data-natural-height=2000 data-position-y=center>
+        data-image-src="images/optimized/hero-bg-1920.jpg" data-natural-width=1920 data-natural-height=1280 data-position-y=center>
 
         <div class="overlay"></div>
         <div class="shadow-overlay"></div>
@@ -182,6 +181,10 @@
                     <li>
                         <div class="progress percent90"><span>90%</span></div>
                         <strong>HTML/CSS</strong>
+                    </li>
+                    <li>
+                        <div class="progress percent90"><span>90%</span></div>
+                        <strong>JavaScript</strong>
                     </li>
                     <li>
                         <div class="progress percent90"><span>90%</span></div>
@@ -343,7 +346,7 @@
                     <div class="timeline__block">
                         <div class="timeline__bullet"></div>
                         <div class="timeline__header">
-                            <p class="timeline__timeframe">September 2019 - Present</p>
+                            <p class="timeline__timeframe">September 2019 - January 2025</p>
                             <h3>University of Vienna</h3>
                             <h5>Master of Science in Engineering</h5>
                         </div>
@@ -455,10 +458,10 @@
                     <div class="item-folio">
 
                         <div class="item-folio__thumb">
-                            <a href="images/portfolio/gallery/Ferienwohnung-Hubmann.png" class="thumb-link"
-                                title="Ferienwohnung-Hubmann" data-size="1901x919">
-                                <img data-src="images/portfolio/Ferienwohnung-Hubmann.png"
-                                srcset="images/portfolio/Ferienwohnung-Hubmann.png" alt="" class="lazyload">
+                            <a href="images/optimized/ferienwohnung-hubmann-1600.jpg" class="thumb-link"
+                                title="Ferienwohnung-Hubmann" data-size="1600x773">
+                                <img src="images/optimized/ferienwohnung-hubmann-1600.jpg"
+                                    srcset="images/optimized/ferienwohnung-hubmann-1600.jpg" alt="" loading="lazy" decoding="async">
                                 <span class="shadow-overlay"></span>
                             </a>
                         </div>
@@ -488,10 +491,10 @@
                     <div class="item-folio">
 
                         <div class="item-folio__thumb">
-                            <a href="images/portfolio/gallery/SpondFilter.png" class="thumb-link"
-                                title="SpondFilter" data-size="1901x919">
-                                <img data-src="images/portfolio/SpondFilter.png"
-                                srcset="images/portfolio/SpondFilter.png" alt="" class="lazyload">
+                            <a href="images/optimized/spondfilter-1600.jpg" class="thumb-link"
+                                title="SpondFilter" data-size="746x622">
+                                <img src="images/optimized/spondfilter-1600.jpg"
+                                    srcset="images/optimized/spondfilter-1600.jpg" alt="" loading="lazy" decoding="async">
                                 <span class="shadow-overlay"></span>
                             </a>
                         </div>
@@ -521,10 +524,10 @@
                     <div class="item-folio">
 
                         <div class="item-folio__thumb">
-                            <a href="images/portfolio/gallery/flutter_crush_master_thesis.png" class="thumb-link"
-                                data-size="1080x2400">
-                                <img src="images/portfolio/flutter_crush_master_thesis.png"
-                                    srcset="images/portfolio/flutter_crush_master_thesis.png" alt="" class="lazyload">
+                            <a href="images/optimized/flutter-crush-1200.jpg" class="thumb-link"
+                                data-size="435x940">
+                                <img src="images/optimized/flutter-crush-1200.jpg"
+                                    srcset="images/optimized/flutter-crush-1200.jpg" alt="" loading="lazy" decoding="async">
                                 <span class="shadow-overlay"></span>
                             </a>
                         </div>
@@ -555,45 +558,10 @@
                     <div class="item-folio">
 
                         <div class="item-folio__thumb">
-                            <a href="images/portfolio/gallery/Buchungsplattform.jpg" class="thumb-link"
-                                data-size="1080x2400">
-                                <img src="images/portfolio/Buchungsplattform.jpg"
-                                    srcset="images/portfolio/Buchungsplattform.jpg" alt="" class="lazyload">
-                                <span class="shadow-overlay"></span>
-                            </a>
-                        </div>
-
-                        <div class="item-folio__text">
-                            <h3 class="item-folio__title">
-                                Buchungsplattform
-                            </h3>
-                            <p class="item-folio__cat">
-                                App Development
-                            </p>
-                        </div>
-
-                        <a href="https://github.com/felpower/Buchungsplatform" class="item-folio__project-link"
-                            title="Project link">
-                            <i class="im im-link"></i>
-                        </a>
-
-                        <span class="item-folio__caption">
-                            <p>The Buchungsplatform is a project i am working on which makes it able for (sports) clubs
-                                to book different types of fields for their players. <a
-                                    href="https://github.com/felpower/Buchungsplatform"> Buchungsplatform</a></p>
-                        </span>
-
-                    </div> <!-- end item-folio -->
-                </div> <!-- end masonry__brick -->
-
-                <div class="masonry__brick">
-                    <div class="item-folio">
-
-                        <div class="item-folio__thumb">
-                            <a href="images/portfolio/gallery/Private_Blockchain.png" class="thumb-link"
-                                data-size="2478x1112">
-                                <img src="images/portfolio/Private_Blockchain.png"
-                                    srcset="images/portfolio/Private_Blockchain.png" alt="" class="lazyload">
+                            <a href="images/optimized/private-blockchain-1600.jpg" class="thumb-link"
+                                data-size="1600x718">
+                                <img src="images/optimized/private-blockchain-1600.jpg"
+                                    srcset="images/optimized/private-blockchain-1600.jpg" alt="" loading="lazy" decoding="async">
                                 <span class="shadow-overlay"></span>
                             </a>
                         </div>
@@ -626,10 +594,44 @@
                     <div class="item-folio">
 
                         <div class="item-folio__thumb">
-                            <a href="images/portfolio/gallery/showercontrol.jpg" class="thumb-link"
-                                data-size="2804x3738">
-                                <img src="images/portfolio/showercontrol.jpg"
-                                    srcset="images/portfolio/showercontrol.jpg" alt="" class="lazyload">
+                            <a href="images/optimized/offbeat-management-1600.jpg" class="thumb-link"
+                                data-size="1600x798">
+                                <img src="images/optimized/offbeat-management-1600.jpg"
+                                    srcset="images/optimized/offbeat-management-1600.jpg" alt="" loading="lazy" decoding="async">
+                                <span class="shadow-overlay"></span>
+                            </a>
+                        </div>
+
+                        <div class="item-folio__text">
+                            <h3 class="item-folio__title">
+                                Offbeat Management
+                            </h3>
+                            <p class="item-folio__cat">
+                                Web Development
+                            </p>
+                        </div>
+
+                        <a href="https://offbeat-management.at/" class="item-folio__project-link"
+                            title="Project link">
+                            <i class="im im-link"></i>
+                        </a>
+
+                        <span class="item-folio__caption">
+                            <p>Offbeat Management is a website project focused on a bold, modern online presence. <a
+                                    href="https://offbeat-management.at/"> Offbeat Management</a></p>
+                        </span>
+
+                    </div> <!-- end item-folio -->
+                </div> <!-- end masonry__brick -->
+
+                <div class="masonry__brick">
+                    <div class="item-folio">
+
+                        <div class="item-folio__thumb">
+                            <a href="images/optimized/showercontrol-1600.jpg" class="thumb-link"
+                                data-size="1600x2133">
+                                <img src="images/optimized/showercontrol-1600.jpg"
+                                    srcset="images/optimized/showercontrol-1600.jpg" alt="" loading="lazy" decoding="async">
                                 <span class="shadow-overlay"></span>
                             </a>
                         </div>
@@ -662,8 +664,9 @@
                     <div class="item-folio">
 
                         <div class="item-folio__thumb">
-                            <a href="images/portfolio/gallery/Bandm8s.png" class="thumb-link" data-size="1280x720">
-                                <img src="images/portfolio/Bandm8s.png" srcset="images/portfolio/Bandm8s.png" alt="" class="lazyload">
+                            <a href="images/optimized/bandm8s-1600.jpg" class="thumb-link" data-size="1280x720">
+                                <img src="images/optimized/bandm8s-1600.jpg"
+                                    srcset="images/optimized/bandm8s-1600.jpg" alt="" loading="lazy" decoding="async">
                                 <span class="shadow-overlay"></span>
                             </a>
                         </div>
@@ -980,9 +983,9 @@
 
     <!-- Java Script
     ================================================== -->
-    <script src="js/jquery-3.2.1.min.js"></script>
-    <script src="js/plugins.js"></script>
-    <script src="js/main.js"></script>
+    <script defer src="js/jquery-3.2.1.min.js"></script>
+    <script defer src="js/plugins.js"></script>
+    <script defer src="js/main.js"></script>
 
 </body>
 

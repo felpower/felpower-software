@@ -85,7 +85,7 @@
             margin: 0;
         }
 
-        .smartmeter-widget {
+        /* .smartmeter-widget {
             background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
             color: white;
             padding: 15px 25px;
@@ -128,7 +128,7 @@
             font-size: 1.2rem;
             opacity: 0.8;
             margin: 0;
-        }
+        } */
 
         .config-modal {
             display: none;
@@ -373,17 +373,17 @@
                 </div>
             </div>
 
-            <div class="smartmeter-widget" id="smartmeter-widget" title="Klicken zum Konfigurieren">
+            <!-- <div class="smartmeter-widget" id="smartmeter-widget" title="Klicken zum Konfigurieren">
                 <div class="smartmeter-icon">⚡</div>
                 <div class="smartmeter-info">
                     <p class="smartmeter-value" id="smartmeter-value">-- kWh</p>
                     <p class="smartmeter-label" id="smartmeter-label">Wochenverbrauch</p>
                     <p class="smartmeter-period" id="smartmeter-period">Nicht konfiguriert</p>
                 </div>
-            </div>
+            </div> -->
         </div>
 
-        <!-- Smart Meter Configuration Modal -->
+        <!-- Smart Meter Configuration Modal
         <div class="config-modal" id="config-modal">
             <div class="config-content">
                 <h2>⚡ Smart Meter Konfiguration</h2>
@@ -401,7 +401,7 @@
                 <button class="btn-cancel" id="cancel-config">Abbrechen</button>
                 <button class="btn-cancel" id="clear-config" style="float: right;">Löschen</button>
             </div>
-        </div>
+        </div> -->
         <div class="last-update" id="last-update">
             Letzte Aktualisierung: --
         </div>
@@ -415,7 +415,6 @@
                         <th>Linie</th>
                         <th>Richtung</th>
                         <th>Abfahrt</th>
-                        <th>Barrierefrei</th>
                     </tr>
                 </thead>
                 <tbody id="departures-body">
@@ -448,10 +447,10 @@
 
     <!-- Java Script
     ================================================== -->
-    <script src="js/jquery-3.2.1.min.js"></script>
-    <script src="js/plugins.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/monitor.js"></script>
+    <script defer src="js/jquery-3.2.1.min.js"></script>
+    <script defer src="js/plugins.js"></script>
+    <script defer src="js/main.js"></script>
+    <script defer src="js/monitor.js"></script>
 
 </body>
 </html>

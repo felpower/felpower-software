@@ -30,14 +30,14 @@
         setupEventListeners();
         loadDepartures();
         loadWeather();
-        loadSmartMeterData();
+        // loadSmartMeterData();
         
         // Auto-refresh every 30 seconds
         refreshTimer = setInterval(loadDepartures, CONFIG.REFRESH_INTERVAL);
         // Refresh weather every 10 minutes
         setInterval(loadWeather, 600000);
         // Refresh smart meter data every 30 minutes
-        setInterval(loadSmartMeterData, 1800000);
+        // setInterval(loadSmartMeterData, 1800000);
     }
 
     /**
@@ -46,34 +46,38 @@
     function setupEventListeners() {
         const stationSelect = document.getElementById('station-select');
         const customRBL = document.getElementById('custom-rbl');
-        const smartmeterWidget = document.getElementById('smartmeter-widget');
+        // Smartmeter UI may be disabled; guard optional elements
         const configModal = document.getElementById('config-modal');
         const saveConfig = document.getElementById('save-config');
         const cancelConfig = document.getElementById('cancel-config');
         const clearConfig = document.getElementById('clear-config');
 
         // Smart meter configuration
-        smartmeterWidget.addEventListener('click', function() {
-            openConfigModal();
-        });
+        // smartmeterWidget.addEventListener('click', function() {
+        //     openConfigModal();
+        // });
 
-        saveConfig.addEventListener('click', function() {
-            saveSmartMeterConfig();
-        });
+        // saveConfig.addEventListener('click', function() {
+        //     saveSmartMeterConfig();
+        // });
 
-        cancelConfig.addEventListener('click', function() {
-            configModal.classList.remove('active');
-        });
-
-        clearConfig.addEventListener('click', function() {
-            clearSmartMeterConfig();
-        });
-
-        configModal.addEventListener('click', function(e) {
-            if (e.target === configModal) {
+        if (cancelConfig && configModal) {
+            cancelConfig.addEventListener('click', function() {
                 configModal.classList.remove('active');
-            }
-        });
+            });
+        }
+
+        // clearConfig.addEventListener('click', function() {
+        //     clearSmartMeterConfig();
+        // });
+
+        if (configModal) {
+            configModal.addEventListener('click', function(e) {
+                if (e.target === configModal) {
+                    configModal.classList.remove('active');
+                }
+            });
+        }
 
         stationSelect.addEventListener('change', function() {
             if (this.value === 'custom') {
@@ -175,7 +179,7 @@
         tbody.innerHTML = '';
 
         if (!data.data || !data.data.monitors || data.data.monitors.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="4" class="loading">Keine Abfahrten gefunden für diese Station.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="3" class="loading">Keine Abfahrten gefunden für diese Station.</td></tr>';
             return;
         }
 
@@ -191,7 +195,6 @@
                                 line: line.name,
                                 towards: line.towards,
                                 lineType: line.type || 'ptBusCity',
-                                barrierFree: line.barrierFree || false,
                                 departureTime: departure.departureTime,
                                 countdown: departure.departureTime.countdown
                             });
@@ -211,7 +214,7 @@
         });
 
         if (departures.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="4" class="loading">Keine Abfahrten in den nächsten Minuten.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="3" class="loading">Keine Abfahrten in den nächsten Minuten.</td></tr>';
         }
     }
 
@@ -250,15 +253,6 @@
         
         countdownCell.appendChild(countdownSpan);
         row.appendChild(countdownCell);
-
-        // Barrier-free
-        const barrierCell = document.createElement('td');
-        if (departure.barrierFree) {
-            barrierCell.innerHTML = '<span class="barrier-free">♿ Ja</span>';
-        } else {
-            barrierCell.textContent = 'Nein';
-        }
-        row.appendChild(barrierCell);
 
         return row;
     }
@@ -376,7 +370,7 @@
      */
     function showLoading() {
         const tbody = document.getElementById('departures-body');
-        tbody.innerHTML = '<tr><td colspan="4" class="loading">Lade Daten...</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="3" class="loading">Lade Daten...</td></tr>';
     }
 
     /**
@@ -404,19 +398,16 @@
                 <td><span class="line-badge line-u">U1</span></td>
                 <td>Leopoldau</td>
                 <td><span class="countdown">2 min</span></td>
-                <td><span class="barrier-free">♿ Ja</span></td>
             </tr>
             <tr>
                 <td><span class="line-badge line-u">U3</span></td>
                 <td>Ottakring</td>
                 <td><span class="countdown">5 min</span></td>
-                <td><span class="barrier-free">♿ Ja</span></td>
             </tr>
             <tr>
                 <td><span class="line-badge line-tram">2</span></td>
                 <td>Dornbach</td>
                 <td><span class="countdown">8 min</span></td>
-                <td>Nein</td>
             </tr>
         `;
     }
